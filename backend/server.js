@@ -312,7 +312,13 @@ app.post('/api/booking/passenger-info', (req, res) => {
 
 app.post('/api/booking/confirm', (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId, date } = req.body;
+    if (!userId) return res.status(400).json({ error: 'userId required' });
+
+    // [Exception Handling] Validasi tanggal keberangkatan
+    const dateError = validateTravelDate(date);
+    if (dateError) return res.status(400).json({ error: dateError });
+
     const stack = bookingStacks[userId];
     if (!stack) return res.status(400).json({ error: 'No active booking session' });
 
@@ -334,6 +340,7 @@ app.post('/api/booking/confirm', (req, res) => {
       priority: step2.priority || 'regular',
       priorityReason: step2.priorityReason || '',
       bookedAt: new Date().toISOString(),
+      date,
       status: 'confirmed'
     };
 
