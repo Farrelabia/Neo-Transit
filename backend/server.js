@@ -370,6 +370,10 @@ app.delete('/api/booking/cancel/:code', (req, res) => {
     const ticket = ticketTree.search(req.params.code);
     if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
 
+    if (ticket.status === 'cancelled') {
+      return res.status(400).json({ error: 'Ticket already cancelled' });
+    }
+
     // Restore seat
     const scIdx = db.schedules.findIndex(s => s.id === ticket.scheduleId);
     if (scIdx !== -1) {
@@ -387,8 +391,13 @@ app.delete('/api/booking/cancel/:code', (req, res) => {
       db.tickets.push(next);
     }
 
+    // Soft-delete: tandai cancelled, simpan cancelledAt
+    ticket.status = 'cancelled';
+    ticket.cancelledAt = new Date().toISOString();
     ticketTree.delete(req.params.code);
-    db.tickets = db.tickets.filter(t => t.bookingCode !== req.params.code);
+    ticketTree.insert(ticket);
+    const tIdx = db.tickets.findIndex(t => t.bookingCode === req.params.code);
+    if (tIdx !== -1) db.tickets[tIdx] = ticket;
     saveDatabase();
     res.json({ message: 'Ticket cancelled', bookingCode: req.params.code });
   } catch (err) {
