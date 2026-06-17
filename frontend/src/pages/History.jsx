@@ -81,7 +81,7 @@ export default function History() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-1">Riwayat Pemasanan</h1>
+      <h1 className="text-2xl font-bold mb-1">Riwayat Pemesanan</h1>
       <p className="text-gray-500 mb-6">Semua tiket yang pernah Anda pesan.</p>
 
       {/* Filter pills */}
