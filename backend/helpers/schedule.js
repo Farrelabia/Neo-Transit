@@ -8,5 +8,10 @@ function enrichSchedule(schedule, db) {
   return { ...schedule, train, stationFrom, stationTo };
 }
 
-// Belum dieksport — step berikutnya akan menambah validateTravelDate.
-module.exports = { enrichSchedule };
+// [Exception Handling] Stub — implementasi asli ada di Task 2.
+// Stub return string agar test file load bersih (TDD red per-assert).
+function validateTravelDate() {
+  return 'validateTravelDate: not implemented yet (Task 2)';
+}
+
+module.exports = { enrichSchedule, validateTravelDate };
