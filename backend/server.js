@@ -329,6 +329,7 @@ app.post('/api/booking/confirm', (req, res) => {
       passengerName: step2.passengerName,
       priority: step2.priority || 'regular',
       priorityReason: step2.priorityReason || '',
+      bookedAt: new Date().toISOString(),
       status: 'confirmed'
     };
 
@@ -411,6 +412,7 @@ app.post('/api/waiting-list/join', (req, res) => {
       passengerName,
       priority: priority || 1,
       priorityReason: priorityReason || 'regular',
+      bookedAt: new Date().toISOString(),
       userId: userId || '',
       bookingCode: generateId('BK'),
       status: 'waiting'
