@@ -8,10 +8,25 @@ function enrichSchedule(schedule, db) {
   return { ...schedule, train, stationFrom, stationTo };
 }
 
-// [Exception Handling] Stub — implementasi asli ada di Task 2.
-// Stub return string agar test file load bersih (TDD red per-assert).
-function validateTravelDate() {
-  return 'validateTravelDate: not implemented yet (Task 2)';
+// [Exception Handling] Validasi tanggal keberangkatan.
+// Mengembalikan string error, atau null jika valid.
+// today parameterizable agar testable (default = new Date()).
+function validateTravelDate(date, today = new Date()) {
+  if (!date || typeof date !== 'string') {
+    return 'Date required (YYYY-MM-DD)';
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return 'Invalid date format (YYYY-MM-DD required)';
+  }
+  const parsed = new Date(date + 'T00:00:00');
+  if (isNaN(parsed.getTime())) {
+    return 'Invalid date';
+  }
+  const t = new Date(today); t.setHours(0, 0, 0, 0);
+  const max = new Date(t); max.setDate(max.getDate() + 30);
+  if (parsed < t) return 'Date cannot be in the past';
+  if (parsed > max) return 'Date must be within 30 days from today';
+  return null;
 }
 
 module.exports = { enrichSchedule, validateTravelDate };
