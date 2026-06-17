@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/axios';
 
 const AuthContext = createContext(null);
@@ -34,10 +34,28 @@ export function AuthProvider({ children }) {
     return env ? env.user : null;
   });
 
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  const clearSessionExpired = () => setSessionExpired(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const tick = () => {
+      const env = readEnvelope();
+      if (!env) {
+        setUser(null);
+        setSessionExpired(true);
+      }
+    };
+    const intervalId = setInterval(tick, SESSION_CHECK_INTERVAL_MS);
+    return () => clearInterval(intervalId);
+  }, [user]);
+
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
     const envelope = { user: res.data, expiresAt: Date.now() + SESSION_DURATION_MS };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(envelope));
+    setSessionExpired(false);
     setUser(res.data);
     return res.data;
   };
@@ -53,7 +71,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout, sessionExpired, clearSessionExpired }}>
       {children}
     </AuthContext.Provider>
   );
