@@ -18,8 +18,16 @@ function validateTravelDate(date, today = new Date()) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return 'Invalid date format (YYYY-MM-DD required)';
   }
-  const parsed = new Date(date + 'T00:00:00');
-  if (isNaN(parsed.getTime())) {
+  // Round-trip check: parse component-wise lalu verifikasi field tahun/bulan/tanggal cocok.
+  // new Date('2026-02-30') tidak mengembalikan Invalid Date di V8 — ia rollover ke 2026-03-02.
+  const [y, m, d] = date.split('-').map(Number);
+  const parsed = new Date(y, m - 1, d);
+  if (
+    isNaN(parsed.getTime()) ||
+    parsed.getFullYear() !== y ||
+    parsed.getMonth() !== m - 1 ||
+    parsed.getDate() !== d
+  ) {
     return 'Invalid date';
   }
   const t = new Date(today); t.setHours(0, 0, 0, 0);

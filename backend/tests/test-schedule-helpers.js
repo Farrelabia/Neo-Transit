@@ -52,6 +52,9 @@ assert(validateTravelDate('not-a-date', today) !== null, 'invalid format rejecte
 assert(validateTravelDate('', today) !== null, 'empty string rejected');
 assert(validateTravelDate(undefined, today) !== null, 'undefined rejected');
 assert(validateTravelDate('2026-13-45', today) !== null, 'impossible date rejected');
+assert(validateTravelDate('2026-02-30', today) !== null, 'Feb 30 rejected (silent rollover)');
+assert(validateTravelDate('2026-02-29', today) !== null, 'Feb 29 non-leap rejected');
+assert(validateTravelDate('2026-04-31', today) !== null, 'Apr 31 rejected');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed`);
 process.exit(failed > 0 ? 1 : 0);
