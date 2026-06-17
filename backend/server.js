@@ -177,7 +177,8 @@ app.get('/api/routes/shortest', (req, res) => {
 
     // [Lambda Expression] Sort by price
     const sorted = Sorter.quickSort(routeSchedules, (a, b) => a.price - b.price);
-    res.json({ path: result, schedules: sorted });
+    const enrichedSchedules = sorted.map(sc => enrichSchedule(sc, db));
+    res.json({ path: result, schedules: enrichedSchedules });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
