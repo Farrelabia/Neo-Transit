@@ -477,10 +477,15 @@ app.get('/api/booking/history/:userId', (req, res) => {
 
 app.post('/api/waiting-list/join', (req, res) => {
   try {
-    const { scheduleId, passengerName, priority, priorityReason, userId } = req.body;
+    const { scheduleId, passengerName, priority, priorityReason, userId, date } = req.body;
     if (!scheduleId || !passengerName) {
       return res.status(400).json({ error: 'scheduleId and passengerName required' });
     }
+
+    // [Exception Handling] Validasi tanggal keberangkatan
+    const dateError = validateTravelDate(date);
+    if (dateError) return res.status(400).json({ error: dateError });
+
     if (!waitingLists[scheduleId]) waitingLists[scheduleId] = new PriorityQueue();
 
     const entry = {
@@ -492,7 +497,8 @@ app.post('/api/waiting-list/join', (req, res) => {
       bookedAt: new Date().toISOString(),
       userId: userId || '',
       bookingCode: generateId('BK'),
-      status: 'waiting'
+      status: 'waiting',
+      date
     };
     waitingLists[scheduleId].enqueue(entry, entry.priority);
     db.waitingList.push(entry);
