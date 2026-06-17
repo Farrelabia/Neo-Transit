@@ -13,6 +13,7 @@ const { BinarySearchTree } = require('./data-structures/BinarySearchTree');
 const { HashTable } = require('./data-structures/HashTable');
 const { Graph } = require('./data-structures/Graph');
 const { Sorter } = require('./data-structures/Sorter');
+const { enrichSchedule, validateTravelDate } = require('./helpers/schedule');
 
 const app = express();
 app.use(cors());
@@ -212,7 +213,9 @@ app.get('/api/schedules', (req, res) => {
 
     // [STL Count] Ekuivalen std::count
     const total = result.length;
-    res.json({ total, schedules: result });
+    // [Lambda Expression] enrich setiap schedule dengan data train & stations
+    const enriched = result.map(sc => enrichSchedule(sc, db));
+    res.json({ total, schedules: enriched });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
