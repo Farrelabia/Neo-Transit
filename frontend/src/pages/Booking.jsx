@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
+import ScheduleCard from '../components/ScheduleCard';
+import { todayISO, plusDaysISO, formatDateID } from '../utils/date';
 
 export default function Booking() {
   const { user } = useAuth();
@@ -14,6 +16,7 @@ export default function Booking() {
   const [priority, setPriority] = useState('regular');
   const [error, setError] = useState('');
   const [ticket, setTicket] = useState(null);
+  const [date, setDate] = useState(location.state?.date || todayISO());
 
   useEffect(() => {
     api.get('/schedules').then(res => {
@@ -59,7 +62,7 @@ export default function Booking() {
 
   const handleConfirm = async () => {
     try {
-      const res = await api.post('/booking/confirm', { userId: user.id });
+      const res = await api.post('/booking/confirm', { userId: user.id, date });
       setTicket(res.data.ticket);
       setStep(4);
     } catch (err) {
@@ -89,7 +92,8 @@ export default function Booking() {
         passengerName,
         priority: priorityMap[priority] || 1,
         priorityReason: priority,
-        userId: user.id
+        userId: user.id,
+        date
       });
       setStep(4);
       setTicket({ status: 'waiting', passengerName, scheduleId: selectedSchedule.id });
@@ -115,14 +119,26 @@ export default function Booking() {
       {step === 1 && (
         <div>
           <h2 className="text-xl font-bold mb-4">Pilih Kereta</h2>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1">Tanggal Keberangkatan</label>
+            <input
+              type="date"
+              value={date}
+              min={todayISO()}
+              max={plusDaysISO(30)}
+              onChange={e => setDate(e.target.value)}
+              className="w-full border rounded px-3 py-2"
+              required
+            />
+          </div>
           {schedules.map(sc => (
-            <div key={sc.id} className="border rounded-lg p-4 mb-3 flex justify-between items-center hover:shadow-md">
-              <div>
-                <p className="font-semibold">{sc.departure} → {sc.arrival}</p>
-                <p className="text-sm text-gray-600">Kursi: {sc.availableSeats} | {formatPrice(sc.price)}</p>
-              </div>
-              <button onClick={() => handleSelectTrain(sc)} className="bg-blue-600 text-white px-4 py-1 rounded text-sm hover:bg-blue-700">Pilih</button>
-            </div>
+            <ScheduleCard
+              key={sc.id}
+              schedule={sc}
+              date={date}
+              actionLabel="Pilih"
+              onAction={() => handleSelectTrain(sc)}
+            />
           ))}
         </div>
       )}
@@ -133,7 +149,10 @@ export default function Booking() {
           <h2 className="text-xl font-bold mb-4">Data Penumpang</h2>
           <div className="bg-blue-50 rounded p-3 mb-4">
             <p className="font-semibold">{selectedSchedule?.departure} → {selectedSchedule?.arrival}</p>
-            <p className="text-sm text-gray-600">{formatPrice(selectedSchedule?.price)} | Kursi: {selectedSchedule?.availableSeats}</p>
+            <p className="text-sm text-gray-600">
+              {formatPrice(selectedSchedule?.price)} | Kursi: {selectedSchedule?.availableSeats}
+            </p>
+            <p className="text-sm text-gray-600">Keberangkatan: {formatDateID(date)}</p>
           </div>
           <form onSubmit={handleSubmitInfo} className="space-y-4">
             <div>
@@ -164,6 +183,7 @@ export default function Booking() {
           <h2 className="text-xl font-bold mb-4">Konfirmasi Booking</h2>
           <div className="bg-gray-50 rounded-lg p-4 space-y-2 mb-6">
             <p><span className="font-medium">Kereta:</span> {selectedSchedule?.departure} → {selectedSchedule?.arrival}</p>
+            <p><span className="font-medium">Keberangkatan:</span> {formatDateID(date)}</p>
             <p><span className="font-medium">Harga:</span> {formatPrice(selectedSchedule?.price)}</p>
             <p><span className="font-medium">Penumpang:</span> {passengerName}</p>
             <p><span className="font-medium">Kategori:</span> {priority}</p>
