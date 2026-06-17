@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
+import { formatDateID } from '../utils/date';
 
 const STATUS_STYLES = {
   confirmed: { label: 'Aktif', badge: 'bg-green-100 text-green-700', dot: 'bg-green-500' },
@@ -158,6 +159,11 @@ export default function History() {
                   {t.schedule && (
                     <p className="text-gray-600">
                       {t.schedule.departure} → {t.schedule.arrival}
+                    </p>
+                  )}
+                  {t.date && (
+                    <p className="text-gray-700">
+                      <span className="text-gray-500">Keberangkatan:</span> {formatDateID(t.date)}
                     </p>
                   )}
                   {t.train && (
