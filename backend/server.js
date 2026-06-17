@@ -292,7 +292,7 @@ app.post('/api/booking/select-train', (req, res) => {
     const schedule = schedules.search(scheduleId);
     if (!schedule) return res.status(404).json({ error: 'Schedule not found' });
     stack.push({ step: 1, action: 'select-train', scheduleId, schedule });
-    res.json({ step: 1, schedule });
+    res.json({ step: 1, schedule: enrichSchedule(schedule, db) });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
