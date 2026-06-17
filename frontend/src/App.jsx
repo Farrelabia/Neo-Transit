@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Booking from './pages/Booking';
 import Admin from './pages/Admin';
 import Checkin from './pages/Checkin';
+import History from './pages/History';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/booking" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
           <Route path="/checkin" element={<Checkin />} />
+          <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
