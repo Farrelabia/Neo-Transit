@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import ScheduleCard from '../components/ScheduleCard';
+import { todayISO, plusDaysISO } from '../utils/date';
 
 export default function Home() {
   const [stations, setStations] = useState([]);
@@ -10,6 +12,7 @@ export default function Home() {
   const [alternatives, setAlternatives] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('price');
+  const [date, setDate] = useState(todayISO());
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,8 +36,6 @@ export default function Home() {
     setLoading(false);
   };
 
-  const formatPrice = (p) => 'Rp ' + p.toLocaleString('id-ID');
-
   return (
     <div>
       {/* Hero */}
@@ -56,6 +57,18 @@ export default function Home() {
                 <option value="">Pilih stasiun</option>
                 {stations.map(s => <option key={s.id} value={s.id}>{s.name} ({s.city})</option>)}
               </select>
+            </div>
+            <div className="flex-1 min-w-[150px]">
+              <label className="block text-sm font-medium mb-1">Tanggal Keberangkatan</label>
+              <input
+                type="date"
+                value={date}
+                min={todayISO()}
+                max={plusDaysISO(30)}
+                onChange={e => setDate(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+                required
+              />
             </div>
             <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" disabled={loading}>
               {loading ? 'Mencari...' : 'Cari Rute'}
@@ -90,17 +103,13 @@ export default function Home() {
           </div>
 
           {(sortBy === 'price' ? results.schedules : [...results.schedules].sort((a, b) => a.departure.localeCompare(b.departure))).map(sc => (
-            <div key={sc.id} className="border rounded-lg p-4 mb-3 flex justify-between items-center hover:shadow-md transition">
-              <div>
-                <p className="font-semibold">{sc.departure} → {sc.arrival}</p>
-                <p className="text-sm text-gray-600">Kursi tersedia: {sc.availableSeats}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-lg font-bold text-blue-600">{formatPrice(sc.price)}</p>
-                <button onClick={() => navigate('/booking', { state: { scheduleId: sc.id } })}
-                  className="mt-1 bg-blue-600 text-white px-4 py-1 rounded text-sm hover:bg-blue-700">Pesan</button>
-              </div>
-            </div>
+            <ScheduleCard
+              key={sc.id}
+              schedule={sc}
+              date={date}
+              actionLabel="Pesan"
+              onAction={() => navigate('/booking', { state: { scheduleId: sc.id, date } })}
+            />
           ))}
 
           {/* Alternative Routes */}
