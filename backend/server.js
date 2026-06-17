@@ -405,6 +405,63 @@ app.delete('/api/booking/cancel/:code', (req, res) => {
   }
 });
 
+// ─── History (per-user) ────────────────────────────────
+
+app.get('/api/booking/history/:userId', (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Validasi user ada
+    const userEntries = userTable.display();
+    const userExists = userEntries.some(e => e.value.id === userId);
+    if (!userExists) return res.status(404).json({ error: 'User not found' });
+
+    // Helper: join schedule + train + stations
+    const enrich = (ticket) => {
+      const schedule = db.schedules.find(s => s.id === ticket.scheduleId) || null;
+      const train = schedule ? db.trains.find(t => t.id === schedule.trainId) : null;
+      const stationFrom = schedule ? db.stations.find(st => st.id === schedule.from) : null;
+      const stationTo = schedule ? db.stations.find(st => st.id === schedule.to) : null;
+      return {
+        ...ticket,
+        schedule,
+        train: train || null,
+        stationFrom: stationFrom || null,
+        stationTo: stationTo || null
+      };
+    };
+
+    // Tiket dari BST (confirmed + cancelled)
+    const allTickets = ticketTree.inOrder();
+    const bstTickets = allTickets
+      .filter(t => t.userId === userId)
+      .map(enrich);
+
+    // Waiting-list entries milik user
+    const waitingTickets = [];
+    for (const [scheduleId, pq] of Object.entries(waitingLists)) {
+      const temp = [];
+      while (!pq.isEmpty()) temp.push(pq.dequeue());
+      for (const e of temp) {
+        if (e.userId === userId && e.status === 'waiting') {
+          waitingTickets.push(enrich(e));
+        }
+      }
+      // restore PQ
+      waitingLists[scheduleId] = new PriorityQueue();
+      for (const e of temp) waitingLists[scheduleId].enqueue(e, e.priority);
+    }
+
+    // Merge & sort by bookedAt desc
+    const merged = [...bstTickets, ...waitingTickets];
+    const sorted = Sorter.mergeSort(merged, (a, b) => new Date(b.bookedAt) - new Date(a.bookedAt));
+
+    res.json({ tickets: sorted });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ─── Waiting List (PriorityQueue) ───────────────────────
 
 app.post('/api/waiting-list/join', (req, res) => {
