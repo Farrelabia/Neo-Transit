@@ -203,8 +203,16 @@ export default function Admin() {
                             </div>
                           </div>
                           <div className="md:col-span-2">
-                            <div className="text-gray-700">{wl.user ? wl.user.email : <span className="italic text-gray-400">Tanpa login</span>}</div>
-                            <div className="text-xs text-gray-500">{wl.user ? wl.user.name : '—'}</div>
+                            {wl.user ? (
+                              <>
+                                <div className="text-gray-700">{wl.user.email}</div>
+                                <div className="text-xs text-gray-500">{wl.user.name}</div>
+                              </>
+                            ) : wl.userId ? (
+                              <div className="italic text-gray-400">Pengguna terhapus</div>
+                            ) : (
+                              <div className="italic text-gray-400">Tanpa login</div>
+                            )}
                           </div>
                           <div className="text-gray-600">
                             <div className="text-xs text-gray-400">Booked</div>
