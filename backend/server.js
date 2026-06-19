@@ -541,8 +541,14 @@ app.get('/api/waiting-list', (req, res) => {
         if (!byDate[d]) byDate[d] = [];
         byDate[d].push(e);
       }
+      // Sort each date subgroup by priority desc, then FIFO by bookedAt asc.
+      // Heap drain order is not stable for equal-priority entries, so we
+      // deterministically re-sort before assigning display position.
+      // (PQ is still restored from `temp` below — promotion behavior unchanged.)
       for (const entries of Object.values(byDate)) {
-        entries.forEach((e, i) => result.push(enrich(e, i + 1)));
+        entries
+          .sort((a, b) => b.priority - a.priority || new Date(a.bookedAt) - new Date(b.bookedAt))
+          .forEach((e, i) => result.push(enrich(e, i + 1)));
       }
 
       // Restore PQ
