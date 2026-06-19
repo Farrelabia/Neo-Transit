@@ -511,17 +511,43 @@ app.post('/api/waiting-list/join', (req, res) => {
 
 app.get('/api/waiting-list', (req, res) => {
   try {
+    // [STL Find] Enrich setiap entry dengan schedule/train/stations/user + position
+    const enrich = (entry, position) => {
+      const schedule = db.schedules.find(s => s.id === entry.scheduleId) || null;
+      const train = schedule ? db.trains.find(t => t.id === schedule.trainId) : null;
+      const stationFrom = schedule ? db.stations.find(st => st.id === schedule.from) : null;
+      const stationTo = schedule ? db.stations.find(st => st.id === schedule.to) : null;
+      const user = entry.userId ? (db.users.find(u => u.id === entry.userId) || null) : null;
+      return {
+        ...entry,
+        position,
+        schedule,
+        train,
+        stationFrom,
+        stationTo,
+        user: user ? { id: user.id, name: user.name, email: user.email, role: user.role } : null
+      };
+    };
+
     const result = [];
     for (const [scheduleId, pq] of Object.entries(waitingLists)) {
-      const entries = [];
       const temp = [];
       while (!pq.isEmpty()) temp.push(pq.dequeue());
+
+      // Group by date within this schedule; position = 1-based index within date subgroup
+      const byDate = {};
       for (const e of temp) {
-        entries.push(e);
-        result.push(e);
+        const d = e.date || 'no-date';
+        if (!byDate[d]) byDate[d] = [];
+        byDate[d].push(e);
       }
+      for (const entries of Object.values(byDate)) {
+        entries.forEach((e, i) => result.push(enrich(e, i + 1)));
+      }
+
+      // Restore PQ
       waitingLists[scheduleId] = new PriorityQueue();
-      for (const e of entries) waitingLists[scheduleId].enqueue(e, e.priority);
+      for (const e of temp) waitingLists[scheduleId].enqueue(e, e.priority);
     }
     res.json(result);
   } catch (err) {
