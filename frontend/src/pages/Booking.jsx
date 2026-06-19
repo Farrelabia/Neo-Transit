@@ -16,6 +16,7 @@ export default function Booking() {
   const [priority, setPriority] = useState('regular');
   const [error, setError] = useState('');
   const [ticket, setTicket] = useState(null);
+  const [seatFull, setSeatFull] = useState(false);
   const [date, setDate] = useState(location.state?.date || todayISO());
 
   useEffect(() => {
@@ -67,7 +68,8 @@ export default function Booking() {
       setStep(4);
     } catch (err) {
       if (err.response?.data?.error?.includes('seats')) {
-        setError('Kursi penuh! Anda akan dialihkan ke waiting list.');
+        setSeatFull(true);
+        setError('Kursi penuh! Pilih "Masuk Waiting List" untuk antri prioritas.');
       } else {
         setError(err.response?.data?.error || 'Konfirmasi gagal');
       }
@@ -79,6 +81,7 @@ export default function Booking() {
       await api.post('/booking/undo', { userId: user.id });
       setStep(prev => Math.max(1, prev - 1));
       setError('');
+      setSeatFull(false);
     } catch (err) {
       setError(err.response?.data?.error || 'Undo gagal');
     }
@@ -192,6 +195,14 @@ export default function Booking() {
             <button onClick={handleUndo} className="flex-1 border py-2 rounded hover:bg-gray-50">Kembali (Undo)</button>
             <button onClick={handleConfirm} className="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700">Konfirmasi</button>
           </div>
+          {seatFull && (
+            <button
+              onClick={handleJoinWaitingList}
+              className="w-full mt-3 bg-yellow-600 text-white py-2 rounded hover:bg-yellow-700"
+            >
+              Masuk Waiting List
+            </button>
+          )}
         </div>
       )}
 

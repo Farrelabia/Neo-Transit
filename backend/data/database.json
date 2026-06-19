@@ -1,62 +1,452 @@
 {
   "stations": [
-    { "id": "ST001", "name": "Gambir", "city": "Jakarta" },
-    { "id": "ST002", "name": "Bandung", "city": "Bandung" },
-    { "id": "ST003", "name": "Cirebon", "city": "Cirebon" },
-    { "id": "ST004", "name": "Semarang Tawang", "city": "Semarang" },
-    { "id": "ST005", "name": "Yogyakarta", "city": "Yogyakarta" },
-    { "id": "ST006", "name": "Surabaya Gubeng", "city": "Surabaya" },
-    { "id": "ST007", "name": "Malang", "city": "Malang" },
-    { "id": "ST008", "name": "Solo Balapan", "city": "Solo" }
+    {
+      "id": "ST001",
+      "name": "Gambir",
+      "city": "Jakarta"
+    },
+    {
+      "id": "ST002",
+      "name": "Bandung",
+      "city": "Bandung"
+    },
+    {
+      "id": "ST003",
+      "name": "Cirebon",
+      "city": "Cirebon"
+    },
+    {
+      "id": "ST004",
+      "name": "Semarang Tawang",
+      "city": "Semarang"
+    },
+    {
+      "id": "ST005",
+      "name": "Yogyakarta",
+      "city": "Yogyakarta"
+    },
+    {
+      "id": "ST006",
+      "name": "Surabaya Gubeng",
+      "city": "Surabaya"
+    },
+    {
+      "id": "ST007",
+      "name": "Malang",
+      "city": "Malang"
+    },
+    {
+      "id": "ST008",
+      "name": "Solo Balapan",
+      "city": "Solo"
+    }
   ],
   "routes": [
-    { "from": "ST001", "to": "ST002", "distance": 150, "travelTime": 180 },
-    { "from": "ST001", "to": "ST003", "distance": 250, "travelTime": 210 },
-    { "from": "ST002", "to": "ST003", "distance": 120, "travelTime": 120 },
-    { "from": "ST003", "to": "ST004", "distance": 200, "travelTime": 180 },
-    { "from": "ST004", "to": "ST005", "distance": 130, "travelTime": 120 },
-    { "from": "ST004", "to": "ST008", "distance": 100, "travelTime": 90 },
-    { "from": "ST005", "to": "ST008", "distance": 60, "travelTime": 60 },
-    { "from": "ST005", "to": "ST006", "distance": 320, "travelTime": 270 },
-    { "from": "ST006", "to": "ST007", "distance": 90, "travelTime": 90 },
-    { "from": "ST008", "to": "ST006", "distance": 260, "travelTime": 210 }
+    {
+      "from": "ST001",
+      "to": "ST002",
+      "distance": 150,
+      "travelTime": 180
+    },
+    {
+      "from": "ST001",
+      "to": "ST003",
+      "distance": 250,
+      "travelTime": 210
+    },
+    {
+      "from": "ST002",
+      "to": "ST003",
+      "distance": 120,
+      "travelTime": 120
+    },
+    {
+      "from": "ST003",
+      "to": "ST004",
+      "distance": 200,
+      "travelTime": 180
+    },
+    {
+      "from": "ST004",
+      "to": "ST005",
+      "distance": 130,
+      "travelTime": 120
+    },
+    {
+      "from": "ST004",
+      "to": "ST008",
+      "distance": 100,
+      "travelTime": 90
+    },
+    {
+      "from": "ST005",
+      "to": "ST008",
+      "distance": 60,
+      "travelTime": 60
+    },
+    {
+      "from": "ST005",
+      "to": "ST006",
+      "distance": 320,
+      "travelTime": 270
+    },
+    {
+      "from": "ST006",
+      "to": "ST007",
+      "distance": 90,
+      "travelTime": 90
+    },
+    {
+      "from": "ST008",
+      "to": "ST006",
+      "distance": 260,
+      "travelTime": 210
+    }
   ],
   "trains": [
-    { "id": "TR001", "name": "Argo Parahyangan", "class": "Executive", "capacity": 80 },
-    { "id": "TR002", "name": "Taksaka", "class": "Executive", "capacity": 60 },
-    { "id": "TR003", "name": "Argo Wilis", "class": "Executive", "capacity": 70 },
-    { "id": "TR004", "name": "Matarmaja", "class": "Ekonomi", "capacity": 120 },
-    { "id": "TR005", "name": "Gaya Baru Malam", "class": "Ekonomi", "capacity": 100 },
-    { "id": "TR006", "name": "Argo Anggrek", "class": "Executive", "capacity": 65 },
-    { "id": "TR007", "name": "Bangunkarta", "class": "Bisnis", "capacity": 90 },
-    { "id": "TR008", "name": "Senja Utama", "class": "Ekonomi", "capacity": 110 }
+    {
+      "id": "TR001",
+      "name": "Argo Parahyangan",
+      "class": "Executive",
+      "capacity": 3
+    },
+    {
+      "id": "TR002",
+      "name": "Taksaka",
+      "class": "Executive",
+      "capacity": 60
+    },
+    {
+      "id": "TR003",
+      "name": "Argo Wilis",
+      "class": "Executive",
+      "capacity": 70
+    },
+    {
+      "id": "TR004",
+      "name": "Matarmaja",
+      "class": "Ekonomi",
+      "capacity": 120
+    },
+    {
+      "id": "TR005",
+      "name": "Gaya Baru Malam",
+      "class": "Ekonomi",
+      "capacity": 100
+    },
+    {
+      "id": "TR006",
+      "name": "Argo Anggrek",
+      "class": "Executive",
+      "capacity": 65
+    },
+    {
+      "id": "TR007",
+      "name": "Bangunkarta",
+      "class": "Bisnis",
+      "capacity": 90
+    },
+    {
+      "id": "TR008",
+      "name": "Senja Utama",
+      "class": "Ekonomi",
+      "capacity": 110
+    }
   ],
   "schedules": [
-    { "id": "SC001", "trainId": "TR001", "from": "ST001", "to": "ST002", "departure": "06:00", "arrival": "09:00", "price": 150000, "availableSeats": 80 },
-    { "id": "SC002", "trainId": "TR001", "from": "ST001", "to": "ST002", "departure": "14:00", "arrival": "17:00", "price": 150000, "availableSeats": 80 },
-    { "id": "SC003", "trainId": "TR002", "from": "ST001", "to": "ST003", "departure": "07:00", "arrival": "10:30", "price": 200000, "availableSeats": 60 },
-    { "id": "SC004", "trainId": "TR004", "from": "ST001", "to": "ST003", "departure": "20:00", "arrival": "23:30", "price": 85000, "availableSeats": 120 },
-    { "id": "SC005", "trainId": "TR003", "from": "ST003", "to": "ST004", "departure": "08:00", "arrival": "11:00", "price": 180000, "availableSeats": 70 },
-    { "id": "SC006", "trainId": "TR005", "from": "ST003", "to": "ST004", "departure": "22:00", "arrival": "01:00", "price": 75000, "availableSeats": 100 },
-    { "id": "SC007", "trainId": "TR002", "from": "ST004", "to": "ST005", "departure": "06:30", "arrival": "08:30", "price": 120000, "availableSeats": 60 },
-    { "id": "SC008", "trainId": "TR006", "from": "ST005", "to": "ST006", "departure": "07:00", "arrival": "11:30", "price": 250000, "availableSeats": 65 },
-    { "id": "SC009", "trainId": "TR004", "from": "ST005", "to": "ST006", "departure": "18:00", "arrival": "22:30", "price": 95000, "availableSeats": 120 },
-    { "id": "SC010", "trainId": "TR003", "from": "ST006", "to": "ST007", "departure": "09:00", "arrival": "10:30", "price": 80000, "availableSeats": 70 },
-    { "id": "SC011", "trainId": "TR007", "from": "ST004", "to": "ST008", "departure": "10:00", "arrival": "11:30", "price": 100000, "availableSeats": 90 },
-    { "id": "SC012", "trainId": "TR008", "from": "ST008", "to": "ST006", "departure": "16:00", "arrival": "19:30", "price": 90000, "availableSeats": 110 },
-    { "id": "SC013", "trainId": "TR005", "from": "ST002", "to": "ST003", "departure": "12:00", "arrival": "14:00", "price": 65000, "availableSeats": 100 },
-    { "id": "SC014", "trainId": "TR007", "from": "ST005", "to": "ST008", "departure": "13:00", "arrival": "14:00", "price": 50000, "availableSeats": 90 },
-    { "id": "SC015", "trainId": "TR001", "from": "ST002", "to": "ST001", "departure": "17:00", "arrival": "20:00", "price": 150000, "availableSeats": 80 }
+    {
+      "id": "SC001",
+      "trainId": "TR001",
+      "from": "ST001",
+      "to": "ST002",
+      "departure": "06:00",
+      "arrival": "09:00",
+      "price": 150000,
+      "availableSeats": 0
+    },
+    {
+      "id": "SC002",
+      "trainId": "TR001",
+      "from": "ST001",
+      "to": "ST002",
+      "departure": "14:00",
+      "arrival": "17:00",
+      "price": 150000,
+      "availableSeats": 3
+    },
+    {
+      "id": "SC003",
+      "trainId": "TR002",
+      "from": "ST001",
+      "to": "ST003",
+      "departure": "07:00",
+      "arrival": "10:30",
+      "price": 200000,
+      "availableSeats": 60
+    },
+    {
+      "id": "SC004",
+      "trainId": "TR004",
+      "from": "ST001",
+      "to": "ST003",
+      "departure": "20:00",
+      "arrival": "23:30",
+      "price": 85000,
+      "availableSeats": 120
+    },
+    {
+      "id": "SC005",
+      "trainId": "TR003",
+      "from": "ST003",
+      "to": "ST004",
+      "departure": "08:00",
+      "arrival": "11:00",
+      "price": 180000,
+      "availableSeats": 70
+    },
+    {
+      "id": "SC006",
+      "trainId": "TR005",
+      "from": "ST003",
+      "to": "ST004",
+      "departure": "22:00",
+      "arrival": "01:00",
+      "price": 75000,
+      "availableSeats": 100
+    },
+    {
+      "id": "SC007",
+      "trainId": "TR002",
+      "from": "ST004",
+      "to": "ST005",
+      "departure": "06:30",
+      "arrival": "08:30",
+      "price": 120000,
+      "availableSeats": 60
+    },
+    {
+      "id": "SC008",
+      "trainId": "TR006",
+      "from": "ST005",
+      "to": "ST006",
+      "departure": "07:00",
+      "arrival": "11:30",
+      "price": 250000,
+      "availableSeats": 65
+    },
+    {
+      "id": "SC009",
+      "trainId": "TR004",
+      "from": "ST005",
+      "to": "ST006",
+      "departure": "18:00",
+      "arrival": "22:30",
+      "price": 95000,
+      "availableSeats": 120
+    },
+    {
+      "id": "SC010",
+      "trainId": "TR003",
+      "from": "ST006",
+      "to": "ST007",
+      "departure": "09:00",
+      "arrival": "10:30",
+      "price": 80000,
+      "availableSeats": 70
+    },
+    {
+      "id": "SC011",
+      "trainId": "TR007",
+      "from": "ST004",
+      "to": "ST008",
+      "departure": "10:00",
+      "arrival": "11:30",
+      "price": 100000,
+      "availableSeats": 90
+    },
+    {
+      "id": "SC012",
+      "trainId": "TR008",
+      "from": "ST008",
+      "to": "ST006",
+      "departure": "16:00",
+      "arrival": "19:30",
+      "price": 90000,
+      "availableSeats": 110
+    },
+    {
+      "id": "SC013",
+      "trainId": "TR005",
+      "from": "ST002",
+      "to": "ST003",
+      "departure": "12:00",
+      "arrival": "14:00",
+      "price": 65000,
+      "availableSeats": 100
+    },
+    {
+      "id": "SC014",
+      "trainId": "TR007",
+      "from": "ST005",
+      "to": "ST008",
+      "departure": "13:00",
+      "arrival": "14:00",
+      "price": 50000,
+      "availableSeats": 90
+    },
+    {
+      "id": "SC015",
+      "trainId": "TR001",
+      "from": "ST002",
+      "to": "ST001",
+      "departure": "17:00",
+      "arrival": "20:00",
+      "price": 150000,
+      "availableSeats": 3
+    }
   ],
   "users": [
-    { "id": "US001", "email": "admin@neo.com", "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9", "name": "Admin NeoTransit", "role": "admin" }
+    {
+      "id": "US001",
+      "email": "admin@neo.com",
+      "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+      "name": "Admin NeoTransit",
+      "role": "admin"
+    },
+    {
+      "id": "US-1ETNFJ",
+      "email": "Abia@neo.com",
+      "password": "40db370e22927e441f026e51034e934048f84d637df2b25359618d5a3479a894",
+      "name": "Abia",
+      "role": "user"
+    }
   ],
-  "tickets": [],
-  "waitingList": [],
+  "tickets": [
+    {
+      "bookingCode": "BK-1MH6CH",
+      "userId": "US-1ETNFJ",
+      "scheduleId": "SC001",
+      "passengerName": "Ihsan",
+      "priority": 1,
+      "priorityReason": "regular",
+      "bookedAt": "2026-06-19T15:01:02.395Z",
+      "date": "2026-06-19",
+      "status": "confirmed"
+    },
+    {
+      "bookingCode": "BK-7GADRQ",
+      "userId": "US001",
+      "scheduleId": "SC006",
+      "passengerName": "Abia",
+      "priority": 1,
+      "priorityReason": "regular",
+      "bookedAt": "2026-06-17T13:26:56.584Z",
+      "status": "cancelled",
+      "cancelledAt": "2026-06-17T15:26:56.547Z"
+    },
+    {
+      "bookingCode": "BK-PEUJL4",
+      "userId": "US001",
+      "scheduleId": "SC001",
+      "passengerName": "Filbert",
+      "priority": 5,
+      "priorityReason": "vip",
+      "bookedAt": "2026-06-17T15:26:48.977Z",
+      "date": "2026-06-18",
+      "status": "cancelled",
+      "cancelledAt": "2026-06-17T16:23:12.684Z"
+    },
+    {
+      "bookingCode": "BK-V7FXE1",
+      "userId": "US-TASK6A",
+      "scheduleId": "SC001",
+      "passengerName": "Test",
+      "priority": 1,
+      "priorityReason": "regular",
+      "bookedAt": "2026-06-17T14:48:11.863Z",
+      "date": "2026-06-17",
+      "status": "confirmed"
+    },
+    {
+      "bookingCode": "BK-W7KAKI",
+      "userId": "US-1ETNFJ",
+      "scheduleId": "SC001",
+      "passengerName": "Filbert",
+      "priority": 5,
+      "priorityReason": "vip",
+      "bookedAt": "2026-06-19T15:01:12.749Z",
+      "date": "2026-06-19",
+      "status": "confirmed"
+    },
+    {
+      "id": "WL-QXG3TD",
+      "scheduleId": "SC001",
+      "passengerName": "Test",
+      "priority": 1,
+      "priorityReason": "regular",
+      "bookedAt": "2026-06-17T14:52:35.278Z",
+      "userId": "US-TASK7A",
+      "bookingCode": "BK-WS1S0Q",
+      "status": "confirmed"
+    },
+    {
+      "bookingCode": "BK-X90013",
+      "userId": "US-1ETNFJ",
+      "scheduleId": "SC001",
+      "passengerName": "Abia",
+      "priority": 1,
+      "priorityReason": "regular",
+      "bookedAt": "2026-06-19T15:00:38.956Z",
+      "date": "2026-06-19",
+      "status": "confirmed"
+    }
+  ],
+  "waitingList": [
+    {
+      "id": "WL-4YHHNP",
+      "scheduleId": "SC001",
+      "passengerName": "Justin",
+      "priority": 5,
+      "priorityReason": "vip",
+      "bookedAt": "2026-06-19T15:01:24.083Z",
+      "userId": "US-1ETNFJ",
+      "bookingCode": "BK-UY1W29",
+      "status": "waiting",
+      "date": "2026-06-19"
+    },
+    {
+      "id": "WL-N1OVGD",
+      "scheduleId": "SC001",
+      "passengerName": "Ibam",
+      "priority": 1,
+      "priorityReason": "regular",
+      "bookedAt": "2026-06-19T15:01:40.557Z",
+      "userId": "US-1ETNFJ",
+      "bookingCode": "BK-2XK6DU",
+      "status": "waiting",
+      "date": "2026-06-19"
+    }
+  ],
   "officers": [
-    { "id": "OF001", "name": "Budi Santoso", "role": "masinis" },
-    { "id": "OF002", "name": "Ani Wijaya", "role": "loket" },
-    { "id": "OF003", "name": "Citra Dewi", "role": "masinis" },
-    { "id": "OF004", "name": "Deni Rahman", "role": "loket" }
+    {
+      "id": "OF001",
+      "name": "Budi Santoso",
+      "role": "masinis"
+    },
+    {
+      "id": "OF002",
+      "name": "Ani Wijaya",
+      "role": "loket"
+    },
+    {
+      "id": "OF003",
+      "name": "Citra Dewi",
+      "role": "masinis"
+    },
+    {
+      "id": "OF004",
+      "name": "Deni Rahman",
+      "role": "loket"
+    }
   ]
 }
