@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import api from '../api/axios';
 
 export default function Admin() {
@@ -55,6 +55,52 @@ export default function Admin() {
   };
 
   const formatPrice = (p) => 'Rp ' + p.toLocaleString('id-ID');
+
+  const priorityBadgeClass = (reason) => {
+    if (reason === 'vip') return 'bg-red-100 text-red-700 border border-red-300';
+    if (reason === 'lansia' || reason === 'ibu-hamil') return 'bg-amber-100 text-amber-700 border border-amber-300';
+    return 'bg-gray-100 text-gray-600 border border-gray-300';
+  };
+
+  const formatTime = (iso) => {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr || dateStr === 'no-date') return '—';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
+  const groupedWaitingList = useMemo(() => {
+    const map = {};
+    for (const wl of waitingList) {
+      const key = `${wl.scheduleId}|${wl.date || 'no-date'}`;
+      if (!map[key]) map[key] = [];
+      map[key].push(wl);
+    }
+    return Object.entries(map)
+      .map(([key, entries]) => {
+        const [scheduleId, date] = key.split('|');
+        return {
+          scheduleId,
+          date,
+          entries: entries.sort((a, b) => a.position - b.position)
+        };
+      })
+      .sort((a, b) => {
+        if (a.date !== b.date) {
+          if (a.date === 'no-date') return 1;
+          if (b.date === 'no-date') return -1;
+          return a.date.localeCompare(b.date);
+        }
+        const aDep = a.entries[0]?.schedule?.departure || '99:99';
+        const bDep = b.entries[0]?.schedule?.departure || '99:99';
+        return aDep.localeCompare(bDep);
+      });
+  }, [waitingList]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -115,17 +161,65 @@ export default function Admin() {
       {/* Waiting List Tab */}
       {tab === 'waiting-list' && (
         <div>
-          <h2 className="text-lg font-semibold mb-4">Waiting List ({waitingList.length})</h2>
+          <h2 className="text-lg font-semibold mb-4">Waiting List ({waitingList.length} penumpang, {groupedWaitingList.length} grup)</h2>
           {waitingList.length === 0 ? (
             <p className="text-gray-500">Tidak ada penumpang di waiting list.</p>
           ) : (
-            <div className="space-y-2">
-              {waitingList.map((wl, i) => (
-                <div key={i} className="border rounded p-3 flex justify-between">
-                  <span>{wl.passengerName}</span>
-                  <span className="text-sm text-gray-500">Prioritas: {wl.priority} ({wl.priorityReason}) | Jadwal: {wl.scheduleId}</span>
-                </div>
-              ))}
+            <div className="space-y-4">
+              {groupedWaitingList.map((group, gi) => {
+                const first = group.entries[0];
+                const schedule = first?.schedule;
+                const train = first?.train;
+                return (
+                  <div key={gi} className="border rounded-lg overflow-hidden">
+                    {/* Group header */}
+                    <div className="bg-blue-50 border-b border-blue-200 px-4 py-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-xs font-mono bg-blue-600 text-white px-2 py-0.5 rounded">{group.scheduleId}</span>
+                        <span className="font-semibold">{train?.name || 'Kereta tidak ditemukan'}</span>
+                        {train && <span className="text-sm text-gray-600">· {train.class}</span>}
+                      </div>
+                      <div className="text-sm text-gray-700 mt-1">
+                        {first?.stationFrom?.name || schedule?.from || '—'} → {first?.stationTo?.name || schedule?.to || '—'}
+                        {schedule && <span className="text-gray-500"> · {schedule.departure} → {schedule.arrival}</span>}
+                        <span className="text-gray-500"> · {formatDate(group.date)}</span>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-0.5">{group.entries.length} antrian</div>
+                    </div>
+
+                    {/* Entries */}
+                    <div className="divide-y">
+                      {group.entries.map((wl) => (
+                        <div key={wl.id} className={`px-4 py-3 grid grid-cols-1 md:grid-cols-5 gap-2 items-center text-sm ${wl.position === 1 ? 'bg-yellow-50' : ''}`}>
+                          <div className="flex items-center gap-2">
+                            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${wl.position === 1 ? 'bg-yellow-400 text-yellow-900' : 'bg-gray-200 text-gray-700'}`}>
+                              {wl.position}
+                            </span>
+                            <div>
+                              <div className="font-medium">{wl.passengerName}</div>
+                              <span className={`inline-block text-xs px-1.5 py-0.5 rounded mt-0.5 ${priorityBadgeClass(wl.priorityReason)}`}>
+                                {wl.priorityReason}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="md:col-span-2">
+                            <div className="text-gray-700">{wl.user ? wl.user.email : <span className="italic text-gray-400">Tanpa login</span>}</div>
+                            <div className="text-xs text-gray-500">{wl.user ? wl.user.name : '—'}</div>
+                          </div>
+                          <div className="text-gray-600">
+                            <div className="text-xs text-gray-400">Booked</div>
+                            <div>{formatTime(wl.bookedAt)}</div>
+                          </div>
+                          <div className="text-gray-500 font-mono text-xs">
+                            <div className="text-xs text-gray-400">Code</div>
+                            <div>{wl.bookingCode}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
