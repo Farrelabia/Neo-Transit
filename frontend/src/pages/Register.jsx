@@ -7,7 +7,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { register, login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -15,8 +15,7 @@ export default function Register() {
     setError('');
     try {
       await register(email, password, name);
-      await login(email, password);
-      navigate('/');
+      navigate('/login');
     } catch (err) {
       setError(err.response?.data?.error || 'Registrasi gagal');
     }

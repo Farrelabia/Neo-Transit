@@ -319,6 +319,13 @@
       "password": "40db370e22927e441f026e51034e934048f84d637df2b25359618d5a3479a894",
       "name": "Abia",
       "role": "user"
+    },
+    {
+      "id": "US-304QUK",
+      "email": "filbert@neo.com",
+      "password": "354a5b128a7103729e2c0ed17839b69b6bff7a2fd8dede6a203a1f93e76e5ca7",
+      "name": "Filbert",
+      "role": "user"
     }
   ],
   "tickets": [
@@ -411,6 +418,30 @@
       "bookedAt": "2026-06-19T15:01:24.083Z",
       "userId": "US-1ETNFJ",
       "bookingCode": "BK-UY1W29",
+      "status": "waiting",
+      "date": "2026-06-19"
+    },
+    {
+      "id": "WL-C8EGNN",
+      "scheduleId": "SC001",
+      "passengerName": "Yunesco",
+      "priority": 5,
+      "priorityReason": "vip",
+      "bookedAt": "2026-06-19T15:50:33.991Z",
+      "userId": "US-1ETNFJ",
+      "bookingCode": "BK-VWSES0",
+      "status": "waiting",
+      "date": "2026-06-19"
+    },
+    {
+      "id": "WL-LTE2LM",
+      "scheduleId": "SC001",
+      "passengerName": "Kenzi",
+      "priority": 3,
+      "priorityReason": "lansia",
+      "bookedAt": "2026-06-19T15:54:59.613Z",
+      "userId": "US-304QUK",
+      "bookingCode": "BK-4PGRG6",
       "status": "waiting",
       "date": "2026-06-19"
     },
