@@ -48,19 +48,22 @@ function loadDatabase() {
   officers = new CircularLinkedList();
   for (const of_ of db.officers) officers.addOfficer(of_);
 
-  // Rebuild BST (tickets)
+  // Rebuild BST (confirmed + cancelled; waiting entries di-index dari db.waitingList di bawah)
   ticketTree = new BinarySearchTree();
-  for (const tk of db.tickets) ticketTree.insert(tk);
+  for (const tk of db.tickets) {
+    if (tk.status !== 'waiting') ticketTree.insert(tk);
+  }
 
   // Rebuild HashTable (users)
   userTable = new HashTable();
   for (const u of db.users) userTable.set(u.email, u);
 
-  // Rebuild PriorityQueues (waiting lists)
+  // Rebuild PriorityQueues (waiting lists) + index WL entries di BST supaya check-in by code bisa nemu
   waitingLists = {};
   for (const wl of db.waitingList) {
     if (!waitingLists[wl.scheduleId]) waitingLists[wl.scheduleId] = new PriorityQueue();
     waitingLists[wl.scheduleId].enqueue(wl, wl.priority);
+    ticketTree.insert(wl);
   }
 
   bookingStacks = {};
@@ -397,6 +400,7 @@ app.delete('/api/booking/cancel/:code', (req, res) => {
     if (waitingLists[ticket.scheduleId] && !waitingLists[ticket.scheduleId].isEmpty()) {
       const next = waitingLists[ticket.scheduleId].dequeue();
       next.status = 'confirmed';
+      ticketTree.delete(next.bookingCode);
       ticketTree.insert(next);
       db.tickets = db.tickets.filter(t => t.bookingCode !== next.bookingCode);
       db.tickets.push(next);
@@ -442,10 +446,10 @@ app.get('/api/booking/history/:userId', (req, res) => {
       };
     };
 
-    // Tiket dari BST (confirmed + cancelled)
+    // Tiket dari BST (confirmed + cancelled; waiting di-exclude, ada di PQ)
     const allTickets = ticketTree.inOrder();
     const bstTickets = allTickets
-      .filter(t => t.userId === userId)
+      .filter(t => t.userId === userId && t.status !== 'waiting')
       .map(enrich);
 
     // Waiting-list entries milik user
@@ -501,6 +505,7 @@ app.post('/api/waiting-list/join', (req, res) => {
       date
     };
     waitingLists[scheduleId].enqueue(entry, entry.priority);
+    ticketTree.insert(entry);
     db.waitingList.push(entry);
     saveDatabase();
     res.status(201).json(entry);

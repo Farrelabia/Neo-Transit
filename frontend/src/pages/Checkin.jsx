@@ -1,11 +1,21 @@
 import { useState } from 'react';
 import api from '../api/axios';
 
+const STATUS_STYLES = {
+  confirmed: { label: 'Terverifikasi', badge: 'bg-green-100 text-green-700' },
+  waiting:   { label: 'Menunggu',      badge: 'bg-yellow-100 text-yellow-700' },
+  cancelled: { label: 'Dibatalkan',    badge: 'bg-red-100 text-red-700' }
+};
+
 export default function Checkin() {
   const [code, setCode] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const statusStyle = result
+    ? (STATUS_STYLES[result.ticket.status] || STATUS_STYLES.confirmed)
+    : null;
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -40,8 +50,8 @@ export default function Checkin() {
 
       {result && (
         <div className="bg-white border rounded-lg shadow-md p-6">
-          <div className={`text-center mb-4 py-2 rounded ${result.ticket.status === 'confirmed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-            <span className="font-bold text-lg">{result.ticket.status === 'confirmed' ? 'Terverifikasi' : 'Menunggu'}</span>
+          <div className={`text-center mb-4 py-2 rounded ${statusStyle.badge}`}>
+            <span className="font-bold text-lg">{statusStyle.label}</span>
           </div>
 
           <div className="space-y-3">
